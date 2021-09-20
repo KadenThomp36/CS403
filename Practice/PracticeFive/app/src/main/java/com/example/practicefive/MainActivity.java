@@ -44,8 +44,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startImplicit(View view){
-        Uri uri = Uri.parse("tel:"+txtMessage.getText());
-        Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+//        Uri uri = Uri.parse("tel:"+txtMessage.getText());
+//        Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+//        startActivity(intent);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, "dog videos");
         startActivity(intent);
     }
 
