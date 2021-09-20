@@ -23,10 +23,16 @@ public class FourthActivity extends AppCompatActivity {
         txt3 = findViewById(R.id.txtThree);
 
         Intent intent = getIntent();
-        Bundle b = intent.getExtras();
+//        Bundle b = intent.getExtras();
+//
+//        txt1.setText(b.getString("name"));
+//        txt2.setText(b.getInt("age")+"");
+//        txt3.setText(Arrays.toString(b.getStringArray("grades")));
 
-        txt1.setText(b.getString("name"));
-        txt2.setText(b.getInt("age")+"");
-        txt3.setText(Arrays.toString(b.getStringArray("grades")));
+        Student s = (Student)intent.getSerializableExtra("john");
+
+        txt1.setText(s.name);
+        txt2.setText(s.age + "");
+        txt3.setText(s.gpa + "");
     }
 }
