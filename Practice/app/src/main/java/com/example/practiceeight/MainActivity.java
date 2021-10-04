@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -56,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < 100; i++){
             sList.add(new Student("John" + i, 12, 4.0));
         }
+
+        StudentAdapter studentAdapter = new StudentAdapter(sList);
+        lstSimp.setAdapter(studentAdapter);
     }
 
     @Override
@@ -108,8 +113,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            return ;
+        public View getView(int position, View view, ViewGroup parent) {
+            view = getLayoutInflater().inflate(R.layout.layout_student_item,parent,false);
+            TextView txtName = view.findViewById(R.id.txtName);
+            TextView txtAge = view.findViewById(R.id.txtAge);
+            TextView txtGPA = view.findViewById(R.id.txtGPA);
+
+            txtName.setText(sList.get(position).name);
+            txtAge.setText(sList.get(position).age+"");
+            txtGPA.setText(sList.get(position).gpa+"");
+
+
+            return view;
         }
     }
 }
