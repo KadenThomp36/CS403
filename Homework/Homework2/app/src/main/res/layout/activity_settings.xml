@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Settings">
+
+    <TextView
+        android:id="@+id/txtSettingsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Adjust Your Game Settings"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtCommandsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="How many commands?"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSettingsTitle" />
+
+    <TextView
+        android:id="@+id/txtActionsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        android:text="Choose your actions (select atleast 2)"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCommandsTitle" />
+
+    <CheckBox
+        android:id="@+id/chkTap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="Tap"
+        app:layout_constraintBottom_toTopOf="@+id/chkDoubleTap"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtActionsTitle"
+        app:layout_constraintVertical_bias="0.07999998"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <CheckBox
+        android:id="@+id/chkDoubleTap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Double Tap"
+        app:layout_constraintBottom_toTopOf="@+id/chkSwipe"
+        app:layout_constraintStart_toStartOf="@+id/chkTap"
+        app:layout_constraintTop_toBottomOf="@+id/chkTap" />
+
+    <CheckBox
+        android:id="@+id/chkSwipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Swipe"
+        app:layout_constraintBottom_toTopOf="@+id/chkZoom"
+        app:layout_constraintStart_toStartOf="@+id/chkDoubleTap"
+        app:layout_constraintTop_toBottomOf="@+id/chkDoubleTap" />
+
+    <CheckBox
+        android:id="@+id/chkZoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zoom"
+        app:layout_constraintBottom_toTopOf="@+id/btnSave"
+        app:layout_constraintStart_toStartOf="@+id/chkSwipe"
+        app:layout_constraintTop_toBottomOf="@+id/chkSwipe" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:height="100sp"
+        android:backgroundTint="#009688"
+        android:onClick="Save"
+        android:text="Save"
+        app:layout_constraintBottom_toTopOf="@+id/btnCancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:height="60sp"
+        android:backgroundTint="#E91E63"
+        android:onClick="Cancel"
+        android:text="cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnSave"
+        app:layout_constraintStart_toStartOf="@+id/btnSave" />
+
+    <SeekBar
+        android:id="@+id/seekNumOfCommands"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtCommandsTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txtCommandsTitle"
+        app:layout_constraintTop_toTopOf="@+id/txtCommandsTitle" />
+
+    <TextView
+        android:id="@+id/txtNumOfCommands"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/seekNumOfCommands"
+        app:layout_constraintStart_toStartOf="@+id/seekNumOfCommands"
+        app:layout_constraintTop_toBottomOf="@+id/seekNumOfCommands" />
+</androidx.constraintlayout.widget.ConstraintLayout>
