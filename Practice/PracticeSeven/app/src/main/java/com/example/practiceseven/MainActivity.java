@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    int ctr = 0;
+
     ArrayList<Float> yDir = new ArrayList<>();
     ArrayList<Float> xDir = new ArrayList<>();
     GestureDetector gestureDetector;
@@ -74,74 +76,76 @@ public class MainActivity extends AppCompatActivity {
         scaleGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener{
+        String TAG = "Gesture";
+        //   @Override
+//    public boolean onDown(MotionEvent motionEvent) {
+//        Log.d(TAG, "on down was fired");
+//        return true;
+//    }
+
+//    @Override
+//    public void onShowPress(MotionEvent motionEvent) {
+//        Log.d(TAG, "on show press was fired");
+//    }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent motionEvent) {
+            ctr++;
+            Log.d(TAG, "on single tap was fired" + ctr);
+            return true;
+        }
+
+//    @Override
+//    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+//        Log.d(TAG, "on scroll was fired");
+//        return true;
+//    }
+
+//    @Override
+//    public void onLongPress(MotionEvent motionEvent) {
+//        Log.d(TAG, "on long press was fired");
+//
+//    }
+
+//    @Override
+//    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+//        Log.d(TAG, "on fling was fired");
+//        return true;
+//    }
+
+
+//    @Override
+//    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+//        Log.d(TAG, "on single tap was fired");
+//        return true;
+//    }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent motionEvent) {
+            ctr++;
+            Log.d(TAG, "on double tap was fired" + ctr);
+            return true;
+        }
+
+//    @Override
+//    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+//        //Log.d(TAG, "on fling was fired");
+//        return true;
+//    }
+    }
+
+    class MyZoomDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener{
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector){
+            return true;
+        }
+
+//    @Override
+//    public void onScaleFinished(ScaleGestureDetector detector){
+//
+//    }
+    }
 }
 
-class MyGestureListener extends GestureDetector.SimpleOnGestureListener{
-    String TAG = "Gesture";
-    @Override
-    public boolean onDown(MotionEvent motionEvent) {
-        Log.d(TAG, "on down was fired");
-        return true;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent motionEvent) {
-        Log.d(TAG, "on show press was fired");
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-        Log.d(TAG, "on single tap was fired");
-        return true;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        Log.d(TAG, "on scroll was fired");
-        return true;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent motionEvent) {
-        Log.d(TAG, "on long press was fired");
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        Log.d(TAG, "on fling was fired");
-        return true;
-    }
-
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        Log.d(TAG, "on single tap was fired");
-        return true;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent motionEvent) {
-        Log.d(TAG, "on double tap was fired");
-        return true;
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
-        //Log.d(TAG, "on fling was fired");
-        return true;
-    }
-}
-
-class MyZoomDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener{
-
-    @Override
-    public boolean onScale(ScaleGestureDetector detector){
-        return true;
-    }
-
-    @Override
-    public void onScaleFinished(ScaleGestureDetector detector){
-
-    }
-}

@@ -3,10 +3,14 @@ package com.example.homework2;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -20,13 +24,19 @@ public class MainGame extends AppCompatActivity {
     int numCommands;
     int currentZone;
     int executedZone;
-    boolean gameStart = false;
-    boolean advance = false;
+    int commandNumber;
+    int tapCtr;
+    double startTime;
+    double elapsedTime;
+    boolean gameStart;
     COMMANDS currentCommand;
     COMMANDS executedCommand;
     TextView txtStartGame;
     GestureDetector gestureDetector;
+    ScaleGestureDetector scaleGestureDetector;
     ArrayList<COMMANDS> listOfCommands = new ArrayList<>();
+    ArrayList<Double> velocity = new ArrayList<>();
+    double flingVelocity;
     enum COMMANDS {
         Tap_Once,
         Tap_Twice,
@@ -38,8 +48,8 @@ public class MainGame extends AppCompatActivity {
         Swipe_Down,
         Swipe_Left,
         Swipe_Right,
-        Zoom_In,
-        Zoom_Out
+        Pinch_In,
+        Pinch_Out
     }
     int[] zone1 = new int[4];
     int[] zone2 = new int[4];
@@ -59,6 +69,7 @@ public class MainGame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
         gestureDetector = new GestureDetector(this, new MyGestureListener());
+        scaleGestureDetector = new ScaleGestureDetector(this, new MyZoomDetector());
         txtStartGame = findViewById(R.id.txtStartGame);
         txtZoneOne = findViewById(R.id.txtOne);
         txtZoneTwo = findViewById(R.id.txtTwo);
@@ -72,11 +83,14 @@ public class MainGame extends AppCompatActivity {
         Commands = b.getString("Commands");
         numCommands = b.getInt("numCommands");
 
+        commandNumber = 0;
+        tapCtr = 0;
+        gameStart = false;
+
         for(int i = 0; i < numCommands; i++){
             //TODO: select a random index from "Commands" and use that number to pick a game type
             pickGame();
         }
-        pickZone();
 
 
     }
@@ -129,6 +143,7 @@ public class MainGame extends AppCompatActivity {
     public void playGame(){
         //if user swipes up then...
         Toast.makeText(this, "hey", Toast.LENGTH_SHORT).show();
+        startTime = System.currentTimeMillis();
         txtStartGame.setVisibility(View.INVISIBLE);
         computeZones();
         drawCommand(listOfCommands.get(0));
@@ -219,10 +234,10 @@ public class MainGame extends AppCompatActivity {
 
         switch (zoomDir){
             case 1:
-                currentCommand = COMMANDS.Zoom_In;
+                currentCommand = COMMANDS.Pinch_In;
                 break;
             case 2:
-                currentCommand = COMMANDS.Zoom_Out;
+                currentCommand = COMMANDS.Pinch_Out;
                 break;
         }
 
@@ -235,8 +250,9 @@ public class MainGame extends AppCompatActivity {
     }
 
     public void checkMove(){
-        currentCommand = listOfCommands.get(0);
+        Log.d("start", gameStart + " " + executedCommand + " ");
         if (!gameStart){
+
             if(executedCommand == COMMANDS.Swipe_Up){
                 playGame();
                 gameStart = true;
@@ -244,16 +260,98 @@ public class MainGame extends AppCompatActivity {
                 return;
             }
         }else{
+
             if (executedCommand == currentCommand && executedZone == currentZone){
-                advance = true;
+                if (executedCommand.name().contains("Swipe")){
+                    velocity.add(flingVelocity);
+                }
+                commandNumber++;
                 Toast.makeText(this, "Nice!", Toast.LENGTH_SHORT).show();
+                if (commandNumber == numCommands - 1){
+                    elapsedTime = System.currentTimeMillis() - startTime;
+                    drawClear();
+                    GameOverDialog();
+                    return;
+                }
+                currentCommand = listOfCommands.get(commandNumber);
+                drawCommand(currentCommand);
+                tapCtr=0;
             }
         }
 
-        //if (//move that they did == move were looking for)
+
+    }
+
+    public void GameOverDialog() {
+
+        new AlertDialog.Builder(this)
+                .setMessage("All Commands Complete. Tap Next to view results!")
+                .setPositiveButton("Next", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getApplicationContext(), Summary.class);
+                        Bundle b = new Bundle();
+                        b.putInt("numCommands", numCommands);
+                        b.putDouble("time", elapsedTime);
+                        b.putDouble("fastestFling", fastestFling());
+                        intent.putExtras(b);
+                        startActivity(intent);
+                    }
+                }).show();
+        //finish();
+    }
+
+    public double fastestFling(){
+        double fastest = 0;
+        for (double fling : velocity){
+            if (fling > fastest){
+                fastest = fling;
+            }
+        }
+        return fastest;
+    }
+
+    public void checkTaps(){
+        Log.d("tap", tapCtr+"");
+        if (currentZone == executedZone){
+            tapCtr++;
+        }
+        Log.d("tap", tapCtr+" <-");
+
+        switch (tapCtr){
+            case 1:
+                executedCommand = COMMANDS.Tap_Once;
+                checkMove();
+                break;
+            case 2:
+                executedCommand = COMMANDS.Tap_Twice;
+                checkMove();
+                break;
+            case 3:
+                executedCommand = COMMANDS.Tap_Three_Times;
+                checkMove();
+                break;
+            case 4:
+                executedCommand = COMMANDS.Tap_Four_Times;
+                checkMove();
+                break;
+            case 5:
+                executedCommand = COMMANDS.Tap_Five_Times;
+                checkMove();
+                break;
+        }
+    }
+
+    public void drawClear(){
+        txtZoneOne.setText("1");
+        txtZoneTwo.setText("2");
+        txtZoneThree.setText("3");
+        txtZoneFour.setText("4");
     }
 
     public void drawCommand(COMMANDS command){
+        drawClear();
+        pickZone();
         switch(currentZone){
             case 1:
                 txtZoneOne.setText(command.name().replace("_", " "));
@@ -292,14 +390,13 @@ public class MainGame extends AppCompatActivity {
         }
 
         Log.d("Swipe", executedCommand.name());
-        determineZone(X1, Y1, X2, Y2);
+        determineZone(X1, Y1);
         Log.d("zone", executedZone+"");
-        checkMove();
+
     }
 
-    public void determineZone(float X1, float Y1, float X2, float Y2){
-
-
+    public void determineZone(float X1, float Y1){
+        currentCommand = listOfCommands.get(commandNumber);
 
         if ((X1 > zone1[0]) && (Y1 > zone1[1]) && (X1 < zone1[2]) && ( Y1 < zone1[3])){
             executedZone = 1;
@@ -312,11 +409,19 @@ public class MainGame extends AppCompatActivity {
         } else {
             executedZone = 0;
         }
+
+        if (currentCommand.ordinal() <= 4 && gameStart){
+            checkTaps();
+            return;
+        }
+
+        checkMove();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         gestureDetector.onTouchEvent(event);
+        scaleGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
@@ -324,8 +429,44 @@ public class MainGame extends AppCompatActivity {
 
         @Override
         public boolean onFling(MotionEvent start, MotionEvent end, float v, float v1) {
+            flingVelocity = Math.sqrt(Math.pow(v,2) + Math.pow(v1, 2));
             determineDirection(start, end);
             return true;
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent start) {
+            if (gameStart) {
+                executedCommand = COMMANDS.Double_Tap;
+                determineZone(start.getX(), start.getY());
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent start) {
+            if (gameStart){
+                determineZone(start.getX(), start.getY());
+            }
+            return true;
+        }
+
+    }
+
+    class MyZoomDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener{
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector){
+            Log.d("span", executedCommand.name() + " " + detector.getFocusX() + " " +  detector.getFocusY());
+            if (gameStart) {
+                if(detector.getScaleFactor() > 1){
+                    executedCommand = COMMANDS.Pinch_Out;
+                } else
+                    executedCommand = COMMANDS.Pinch_In;
+
+                determineZone(detector.getFocusX(), detector.getFocusY());
+            }
+
         }
 
     }
